@@ -94,6 +94,3 @@ uv run fastapi dev main.py
 
 No accuracy, groundedness, latency, cost, or cloud-deployment results are claimed until they are measured and published.
 
-## Development provenance
-
-The initial implementation was developed with ChatGPT-assisted guidance and run locally by the project author. AI-assisted changes should be reviewed and explained by the author. Claude Code usage will be documented only if it is actually used.
