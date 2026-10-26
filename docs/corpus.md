@@ -37,7 +37,7 @@ A changed or damaged file produces a nonzero exit status. Existing mismatched fi
 
 The downloader verifies bytes, not PDF structure or policy semantics. Page counts and printed page ranges were checked separately with a PDF reader during corpus review.
 
-## Extraction constraints for the next milestone
+## Extraction constraints
 
 - Pages have two text columns and contain line-break hyphenation and publisher headers/footers.
 - The first and last pages can include neighboring sections. Appendix A(1) includes neighboring section 61.17 and the beginning of A(2); A(2) includes parts of A(1) and A(3); A(3) includes parts of A(2) and Part 62.
@@ -45,7 +45,7 @@ The downloader verifies bytes, not PDF structure or policy semantics. Page count
 - Keep the original, one-based PDF page position for citations. Printed CFR labels are separate metadata: PDF page 1 of the Dwelling file is printed page 156.
 - Preserve the unmodified source and its hash so extraction changes remain reproducible.
 
-**Current status:** source selection, provenance, and verified acquisition are implemented. Page/section extraction, database ingestion, chunking, and retrieval remain to be implemented.
+**Current status:** source selection, provenance, verified acquisition, and page/section extraction are implemented. [Extraction notes](extraction.md) describe the page-preserving JSONL command and its validation. Database ingestion, chunking, and retrieval remain to be implemented.
 
 ## Validation
 

@@ -1,8 +1,8 @@
 # Policy RAG
 
-A portfolio project being developed into a source-citing RAG assistant for public insurance documents. The current milestone provides a containerized FastAPI service, PostgreSQL with pgvector, configuration management, a health smoke test with a GitHub Actions workflow, and verified acquisition of a reviewed public corpus.
+A portfolio project being developed into a source-citing RAG assistant for public insurance documents. The current milestone provides a containerized FastAPI service, PostgreSQL with pgvector, configuration management, a health smoke test with a GitHub Actions workflow, verified acquisition of a reviewed public corpus, and page-preserving extraction.
 
-**Status: foundation and source acquisition implemented.** Document ingestion, embeddings, question answering, evaluation results, and AWS deployment are planned. This repository does not yet expose a question-answering endpoint.
+**Status: foundation, source acquisition, and page extraction implemented.** Database ingestion, embeddings, question answering, evaluation results, and AWS deployment are planned. This repository does not yet expose a question-answering endpoint.
 
 ## Implemented foundation
 
@@ -14,6 +14,7 @@ A portfolio project being developed into a source-citing RAG assistant for publi
 - One automated smoke test that verifies liveness without a database connection.
 - A CI workflow for pushes and pull requests; see the repository's Actions tab for actual run results.
 - A reviewed three-document FEMA/NFIP corpus with pinned source fingerprints and an offline-tested download command.
+- Page-preserving JSONL extraction with verified section boundaries, source metadata, and offline real-PDF tests.
 
 ## Architecture
 
@@ -72,7 +73,7 @@ uv sync --locked --group dev
 uv run --locked python -m pytest -q
 ```
 
-The smoke test supplies temporary settings before importing the application. It asserts HTTP 200 and the response contract for `/health`, and fails if that request attempts a PostgreSQL connection. Docker, an LLM API key, and real database credentials are not required for this test. Downloader tests use mocked network calls, so the test suite does not contact the document host. Readiness and RAG behavior need separate integration/evaluation coverage in later milestones.
+The smoke test supplies temporary settings before importing the application. It asserts HTTP 200 and the response contract for `/health`, and fails if that request attempts a PostgreSQL connection. Docker, an LLM API key, and real database credentials are not required for this test. Downloader tests use mocked network calls and extraction tests generate small PDFs locally, so the test suite does not contact the document host. Readiness and RAG behavior need separate integration/evaluation coverage in later milestones.
 
 For API development against the Compose database, stop the containerized API before using the same host port:
 
@@ -91,7 +92,15 @@ After installing the development environment, download and verify the source fil
 uv run --locked python -m scripts.download_corpus
 ```
 
-PDFs are stored in local `data/raw/`, outside Git and the Docker build context. Repeat runs verify cached files and skip downloading them. The command does not populate PostgreSQL or extract pages; those are the next milestone.
+PDFs are stored in local `data/raw/`, outside Git and the Docker build context. Repeat runs verify cached files and skip downloading them.
+
+Extract the intended policy appendix from each source while preserving original PDF page numbers:
+
+```bash
+uv run --locked python -m scripts.extract_corpus
+```
+
+Page records are written to local `data/processed/<document_id>.pages.jsonl`. Each record includes the document ID, source URL/hash, edition, original PDF position, printed page label, text/hash, and extraction metadata. [Extraction notes](docs/extraction.md) explain section boundaries, the output contract, validation, and supported PDF layout. Database ingestion and chunking are the next steps.
 
 ## Specification and roadmap
 
@@ -99,8 +108,8 @@ PDFs are stored in local `data/raw/`, outside Git and the Docker build context. 
 
 1. Foundation documentation and CI smoke test (implemented).
 2. Reviewed public corpus and verified source downloads (implemented).
-3. Page/section extraction and document ingestion with source metadata.
-4. Chunking, embeddings, and pgvector retrieval.
+3. Page/section extraction with source metadata (implemented).
+4. Chunking, database ingestion, embeddings, and pgvector retrieval.
 5. Structured answers with verified citations and explicit abstention.
 6. A 40–50-question evaluation set and reproducible experiment reports.
 7. Latency, token, and estimated-cost monitoring; CI image builds.
