@@ -9,6 +9,7 @@ dependencies = [
     "psycopg[binary]>=3.3.6",
     "pydantic>=2.14.1",
     "pydantic-settings>=2.16.1",
+    "pypdf[fonts]>=6.21.2,<7",
 ]
 
 [dependency-groups]

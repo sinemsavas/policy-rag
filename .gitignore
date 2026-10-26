@@ -18,5 +18,6 @@ wheels/
 .pytest_cache/
 .ruff_cache/
 
-# Downloaded source files (metadata is tracked in docs/corpus.json)
+# Downloaded sources and extracted records (metadata is tracked in docs/)
 /data/raw/
+/data/processed/

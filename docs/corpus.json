@@ -22,7 +22,12 @@
       "size_bytes": 229381,
       "pdf_pages": 16,
       "printed_page_range": "156-171",
-      "boundary_note": "Begins with the end of section 61.17 and ends with the start of Appendix A(2). Extract only Appendix A(1), preserving original PDF page positions."
+      "boundary_note": "Begins with the end of section 61.17 and ends with the start of Appendix A(2). Extract only Appendix A(1), preserving original PDF page positions.",
+      "extraction": {
+        "profile": "cfr-plain-v1",
+        "start_marker": "APPENDIX A(1) TO PART 61",
+        "end_marker": "APPENDIX A(2) TO PART 61"
+      }
     },
     {
       "document_id": "nfip-general-property-2025-10-01",
@@ -38,7 +43,12 @@
       "size_bytes": 225883,
       "pdf_pages": 15,
       "printed_page_range": "171-185",
-      "boundary_note": "Begins with the end of Appendix A(1) and ends with the start of Appendix A(3). Extract only Appendix A(2), preserving original PDF page positions."
+      "boundary_note": "Begins with the end of Appendix A(1) and ends with the start of Appendix A(3). Extract only Appendix A(2), preserving original PDF page positions.",
+      "extraction": {
+        "profile": "cfr-plain-v1",
+        "start_marker": "APPENDIX A(2) TO PART 61",
+        "end_marker": "APPENDIX A(3) TO PART 61"
+      }
     },
     {
       "document_id": "nfip-rcbap-2025-10-01",
@@ -54,7 +64,12 @@
       "size_bytes": 285599,
       "pdf_pages": 16,
       "printed_page_range": "185-200",
-      "boundary_note": "Begins with the end of Appendix A(2) and ends with the start of Part 62. Extract only Appendix A(3), preserving original PDF page positions."
+      "boundary_note": "Begins with the end of Appendix A(2) and ends with the start of Part 62. Extract only Appendix A(3), preserving original PDF page positions.",
+      "extraction": {
+        "profile": "cfr-plain-v1",
+        "start_marker": "APPENDIX A(3) TO PART 61",
+        "end_marker": "PART 62—SALE OF INSURANCE AND ADJUSTMENT OF CLAIMS"
+      }
     }
   ]
 }

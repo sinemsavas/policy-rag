@@ -17,6 +17,20 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 MAX_SOURCE_BYTES = 5 * 1024 * 1024
 
 
+class ExtractionConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    profile: Literal["cfr-plain-v1"]
+    start_marker: str = Field(min_length=1)
+    end_marker: str = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def distinct_markers(self) -> "ExtractionConfig":
+        if self.start_marker.strip() == self.end_marker.strip():
+            raise ValueError("Extraction start and end markers must differ")
+        return self
+
+
 class SourceDocument(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -34,6 +48,7 @@ class SourceDocument(BaseModel):
     pdf_pages: int = Field(gt=0)
     printed_page_range: str = Field(min_length=1)
     boundary_note: str = Field(min_length=1)
+    extraction: ExtractionConfig | None = None
 
     @model_validator(mode="after")
     def validate_location(self) -> "SourceDocument":

@@ -1,6 +1,6 @@
 # Policy RAG — Specification
 
-Status: foundation and source acquisition implemented; extraction and RAG capabilities specified for subsequent milestones.
+Status: foundation, source acquisition, and page extraction implemented; database ingestion and RAG capabilities specified for subsequent milestones.
 
 ## Purpose
 
@@ -46,6 +46,16 @@ The portfolio should demonstrate backend engineering, retrieval quality, reprodu
 | C-02 | The download command validates the manifest, bounds network reads, and checks the PDF header, exact byte size, and SHA-256 before saving a source file. | `scripts/download_corpus.py`, rejected-content tests, and a real acquisition run. |
 | C-03 | A repeat run verifies and reuses existing files. Mismatches fail with a nonzero status without silently replacing existing files or saving invalid downloads. | Cached-file, corrupt-file, network-failure tests, and a repeat acquisition run. |
 | C-04 | Raw PDFs are excluded from Git and Docker builds. Automated downloader tests use mocked network calls and require no database, real credentials, or paid APIs. | Ignore rules, pytest, and the actual CI run. |
+
+## Acceptance criteria — page extraction
+
+| ID | Requirement | Evidence |
+| --- | --- | --- |
+| X-01 | Extraction verifies the source fingerprint before parsing and checks PDF page count and original printed labels against the manifest. | Source verification, page-count and label-mismatch tests; real-corpus run. |
+| X-02 | Only the intended appendix is retained, from its single start heading up to its single later end heading, including wrapped headings. Missing, duplicate, or reversed boundaries fail. | Boundary notes/configuration and real-PDF boundary tests. |
+| X-03 | Each nonempty selected page record preserves document ID, title, section, source URL/hash, edition, original one-based PDF position, and a separate printed label. Excluding source pages does not renumber later pages. | Pydantic record schema, page-position tests, and JSONL inspection. |
+| X-04 | Outputs record text fingerprints and extraction profile/parser/version/configuration fingerprints. Identical inputs yield identical JSONL without duplicate records. | Determinism tests and a repeated real-corpus run. |
+| X-05 | Unsupported or unreadable text/layout produces a clear nonzero result. All sources are validated before output publication; completed files are replaced atomically. Generated files stay outside Git and Docker builds. | Failure tests, ignore rules, and extraction documentation. |
 
 ## Acceptance criteria — retrieval and answers (planned)
 
