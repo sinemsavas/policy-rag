@@ -17,3 +17,6 @@ wheels/
 # Test and tool caches
 .pytest_cache/
 .ruff_cache/
+
+# Downloaded source files (metadata is tracked in docs/corpus.json)
+/data/raw/
