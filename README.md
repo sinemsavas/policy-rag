@@ -1,8 +1,8 @@
 # Policy RAG
 
-A portfolio project being developed into a source-citing RAG assistant for public insurance documents. The current milestone provides a containerized FastAPI service, PostgreSQL with pgvector, configuration management, and a health smoke test with a GitHub Actions workflow.
+A portfolio project being developed into a source-citing RAG assistant for public insurance documents. The current milestone provides a containerized FastAPI service, PostgreSQL with pgvector, configuration management, a health smoke test with a GitHub Actions workflow, and verified acquisition of a reviewed public corpus.
 
-**Status: foundation milestone.** Document ingestion, embeddings, question answering, evaluation results, and AWS deployment are planned. This repository does not yet expose a question-answering endpoint.
+**Status: foundation and source acquisition implemented.** Document ingestion, embeddings, question answering, evaluation results, and AWS deployment are planned. This repository does not yet expose a question-answering endpoint.
 
 ## Implemented foundation
 
@@ -13,6 +13,7 @@ A portfolio project being developed into a source-citing RAG assistant for publi
 - Docker Compose with a persistent database volume and service health checks.
 - One automated smoke test that verifies liveness without a database connection.
 - A CI workflow for pushes and pull requests; see the repository's Actions tab for actual run results.
+- A reviewed three-document FEMA/NFIP corpus with pinned source fingerprints and an offline-tested download command.
 
 ## Architecture
 
@@ -71,7 +72,7 @@ uv sync --locked --group dev
 uv run --locked python -m pytest -q
 ```
 
-The smoke test supplies temporary settings before importing the application. It asserts HTTP 200 and the response contract for `/health`, and fails if that request attempts a PostgreSQL connection. Docker, an LLM API key, and real database credentials are not required for this test. Readiness and RAG behavior need separate integration/evaluation coverage in later milestones.
+The smoke test supplies temporary settings before importing the application. It asserts HTTP 200 and the response contract for `/health`, and fails if that request attempts a PostgreSQL connection. Docker, an LLM API key, and real database credentials are not required for this test. Downloader tests use mocked network calls, so the test suite does not contact the document host. Readiness and RAG behavior need separate integration/evaluation coverage in later milestones.
 
 For API development against the Compose database, stop the containerized API before using the same host port:
 
@@ -80,17 +81,29 @@ docker compose stop api
 uv run fastapi dev main.py
 ```
 
+## Public source corpus
+
+The first collection contains three FEMA/NFIP Standard Flood Insurance Policy forms from the October 1, 2025 annual CFR edition. See the [corpus catalogue](docs/corpus.md) for sources, reuse review, scope, and extraction constraints; [corpus.json](docs/corpus.json) pins document IDs, versions, sizes, and SHA-256 values.
+
+After installing the development environment, download and verify the source files:
+
+```bash
+uv run --locked python -m scripts.download_corpus
+```
+
+PDFs are stored in local `data/raw/`, outside Git and the Docker build context. Repeat runs verify cached files and skip downloading them. The command does not populate PostgreSQL or extract pages; those are the next milestone.
+
 ## Specification and roadmap
 
 [SPEC.md](SPEC.md) defines scope, constraints, acceptance criteria, and the evidence needed to complete each milestone.
 
-1. Foundation documentation and CI smoke test.
-2. Public-document ingestion with source and page metadata.
-3. Chunking, embeddings, and pgvector retrieval.
-4. Structured answers with verified citations and explicit abstention.
-5. A 40–50-question evaluation set and reproducible experiment reports.
-6. Latency, token, and estimated-cost monitoring; CI image builds.
-7. AWS deployment, a Bedrock backend, and an MCP interface.
+1. Foundation documentation and CI smoke test (implemented).
+2. Reviewed public corpus and verified source downloads (implemented).
+3. Page/section extraction and document ingestion with source metadata.
+4. Chunking, embeddings, and pgvector retrieval.
+5. Structured answers with verified citations and explicit abstention.
+6. A 40–50-question evaluation set and reproducible experiment reports.
+7. Latency, token, and estimated-cost monitoring; CI image builds.
+8. AWS deployment, a Bedrock backend, and an MCP interface.
 
 No accuracy, groundedness, latency, cost, or cloud-deployment results are claimed until they are measured and published.
-

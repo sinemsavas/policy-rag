@@ -1,6 +1,6 @@
 # Policy RAG — Specification
 
-Status: foundation implemented; RAG capabilities specified for subsequent milestones.
+Status: foundation and source acquisition implemented; extraction and RAG capabilities specified for subsequent milestones.
 
 ## Purpose
 
@@ -10,7 +10,7 @@ The portfolio should demonstrate backend engineering, retrieval quality, reprodu
 
 ## Initial scope
 
-- A small, versioned corpus of approximately 3–5 public, text-based insurance PDFs, initially in English.
+- A small, versioned corpus of approximately 3–5 public, text-based insurance PDFs, initially in English. The first collection is three FEMA/NFIP policy forms from the October 1, 2025 annual CFR edition, recorded in `docs/corpus.json`.
 - A Python/FastAPI backend with Pydantic schemas and PostgreSQL/pgvector.
 - A single LLM provider for the first answering baseline; a Bedrock backend later.
 - A REST interface first, followed by an MCP tool using the same retrieval/answering logic.
@@ -37,6 +37,15 @@ The portfolio should demonstrate backend engineering, retrieval quality, reprodu
 | F-05 | The API image installs from `uv.lock` and runs as a non-root user. | Dockerfile and successful local container startup. |
 | F-06 | The smoke test runs locally and on pushes and pull requests with no database service or real secrets. | Pytest output and the actual GitHub Actions run. |
 | F-07 | README describes setup, architecture, endpoint semantics, current scope, and planned work. | README review. |
+
+## Acceptance criteria — source acquisition
+
+| ID | Requirement | Evidence |
+| --- | --- | --- |
+| C-01 | A reviewed manifest records stable document IDs, source URLs, edition, SHA-256, byte size, PDF page count, reuse-review basis, and neighboring-section boundary notes for the initial three documents. | `docs/corpus.json`, `docs/corpus.md`, and inspection of the downloaded sources. |
+| C-02 | The download command validates the manifest, bounds network reads, and checks the PDF header, exact byte size, and SHA-256 before saving a source file. | `scripts/download_corpus.py`, rejected-content tests, and a real acquisition run. |
+| C-03 | A repeat run verifies and reuses existing files. Mismatches fail with a nonzero status without silently replacing existing files or saving invalid downloads. | Cached-file, corrupt-file, network-failure tests, and a repeat acquisition run. |
+| C-04 | Raw PDFs are excluded from Git and Docker builds. Automated downloader tests use mocked network calls and require no database, real credentials, or paid APIs. | Ignore rules, pytest, and the actual CI run. |
 
 ## Acceptance criteria — retrieval and answers (planned)
 
