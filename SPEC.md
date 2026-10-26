@@ -1,6 +1,6 @@
 # Policy RAG — Specification
 
-Status: foundation, source acquisition, and page extraction implemented; database ingestion and RAG capabilities specified for subsequent milestones.
+Status: foundation, source acquisition, page extraction, and chunking implemented; embeddings, database ingestion, and RAG capabilities specified for subsequent milestones.
 
 ## Purpose
 
@@ -56,6 +56,16 @@ The portfolio should demonstrate backend engineering, retrieval quality, reprodu
 | X-03 | Each nonempty selected page record preserves document ID, title, section, source URL/hash, edition, original one-based PDF position, and a separate printed label. Excluding source pages does not renumber later pages. | Pydantic record schema, page-position tests, and JSONL inspection. |
 | X-04 | Outputs record text fingerprints and extraction profile/parser/version/configuration fingerprints. Identical inputs yield identical JSONL without duplicate records. | Determinism tests and a repeated real-corpus run. |
 | X-05 | Unsupported or unreadable text/layout produces a clear nonzero result. All sources are validated before output publication; completed files are replaced atomically. Generated files stay outside Git and Docker builds. | Failure tests, ignore rules, and extraction documentation. |
+
+## Acceptance criteria — chunking
+
+| ID | Requirement | Evidence |
+| --- | --- | --- |
+| K-01 | A versioned baseline config defines the character limit, maximum overlap, and algorithm profile. Invalid limits are rejected. Character counts are separate from model token counts. | `docs/chunking.json`, config validation, and usage notes. |
+| K-02 | Chunks stay within one original PDF page, respect the size cap, prefer whitespace boundaries, and cover every non-whitespace character of each loaded page. Overlap is bounded and recorded as its actual character count. | Boundary/coverage tests and real-corpus checks. |
+| K-03 | Every chunk retains document, source/edition, original PDF position and printed label, parent page/text fingerprint, extraction metadata, exact half-open character offsets, and chunk text/hash. The text equals the indicated parent-page slice. | Structured chunk schema and provenance tests. |
+| K-04 | Chunk IDs depend on content, source/extraction lineage, offsets, and chunking configuration. Repeat runs are deterministic; different configs have separate outputs and a report with input artifact hashes and observed counts. | Determinism/config comparison tests and repeated local runs. |
+| K-05 | Corrupt text fingerprints, inconsistent source metadata, missing/duplicate/out-of-order pages, malformed inputs, or invalid config fail before publishing outputs. Completed files are replaced atomically and generated chunks stay outside Git/Docker builds. | Failure tests, ignore rules, and actual CI. |
 
 ## Acceptance criteria — retrieval and answers (planned)
 

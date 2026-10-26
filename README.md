@@ -1,10 +1,10 @@
 # Policy RAG
 
-A portfolio project being developed into a source-citing RAG assistant for public insurance documents. The current milestone provides a containerized FastAPI service, PostgreSQL with pgvector, configuration management, a health smoke test with a GitHub Actions workflow, verified acquisition of a reviewed public corpus, and page-preserving extraction.
+A portfolio project being developed into a source-citing RAG assistant for public insurance documents. The current milestone provides a containerized FastAPI service, PostgreSQL with pgvector, configuration management, a health smoke test with a GitHub Actions workflow, verified acquisition of a reviewed public corpus, page-preserving extraction, and configurable page-contained chunking.
 
-**Status: foundation, source acquisition, and page extraction implemented.** Database ingestion, embeddings, question answering, evaluation results, and AWS deployment are planned. This repository does not yet expose a question-answering endpoint.
+**Status: foundation, source acquisition, page extraction, and chunking implemented.** Database ingestion, embeddings, question answering, evaluation results, and AWS deployment are planned. This repository does not yet expose a question-answering endpoint.
 
-## Implemented foundation
+## Implemented
 
 - FastAPI with Pydantic response schemas and validated environment settings.
 - Separate liveness (`/health`) and database readiness (`/ready`) endpoints.
@@ -15,6 +15,7 @@ A portfolio project being developed into a source-citing RAG assistant for publi
 - A CI workflow for pushes and pull requests; see the repository's Actions tab for actual run results.
 - A reviewed three-document FEMA/NFIP corpus with pinned source fingerprints and an offline-tested download command.
 - Page-preserving JSONL extraction with verified section boundaries, source metadata, and offline real-PDF tests.
+- Configurable character chunking with exact page offsets, stable IDs, bounded overlap, and per-run provenance reports.
 
 ## Architecture
 
@@ -73,7 +74,7 @@ uv sync --locked --group dev
 uv run --locked python -m pytest -q
 ```
 
-The smoke test supplies temporary settings before importing the application. It asserts HTTP 200 and the response contract for `/health`, and fails if that request attempts a PostgreSQL connection. Docker, an LLM API key, and real database credentials are not required for this test. Downloader tests use mocked network calls and extraction tests generate small PDFs locally, so the test suite does not contact the document host. Readiness and RAG behavior need separate integration/evaluation coverage in later milestones.
+The smoke test supplies temporary settings before importing the application. It asserts HTTP 200 and the response contract for `/health`, and fails if that request attempts a PostgreSQL connection. Docker, an LLM API key, and real database credentials are not required for this test. Downloader tests use mocked network calls and extraction tests generate small PDFs locally, so the test suite does not contact the document host. Chunking tests verify exact source slices, coverage, provenance, and failure handling. Readiness and RAG behavior need separate integration/evaluation coverage in later milestones.
 
 For API development against the Compose database, stop the containerized API before using the same host port:
 
@@ -100,7 +101,13 @@ Extract the intended policy appendix from each source while preserving original 
 uv run --locked python -m scripts.extract_corpus
 ```
 
-Page records are written to local `data/processed/<document_id>.pages.jsonl`. Each record includes the document ID, source URL/hash, edition, original PDF position, printed page label, text/hash, and extraction metadata. [Extraction notes](docs/extraction.md) explain section boundaries, the output contract, validation, and supported PDF layout. Database ingestion and chunking are the next steps.
+Page records are written to local `data/processed/<document_id>.pages.jsonl`. Each record includes the document ID, source URL/hash, edition, original PDF position, printed page label, text/hash, and extraction metadata. [Extraction notes](docs/extraction.md) explain section boundaries, the output contract, validation, and supported PDF layout. Create the baseline chunks:
+
+```bash
+uv run --locked python -m scripts.chunk_corpus
+```
+
+Chunks and their report go to local `data/chunks/page-char-v1-1200-200/`. The baseline uses at most 1200 characters per chunk and up to 200 characters of overlap, keeping original page metadata and exact text offsets. [Chunking notes](docs/chunking.md) describe the configuration, record contract, observed counts, and limitations. Embeddings and PostgreSQL ingestion are the next steps.
 
 ## Specification and roadmap
 
@@ -109,10 +116,11 @@ Page records are written to local `data/processed/<document_id>.pages.jsonl`. Ea
 1. Foundation documentation and CI smoke test (implemented).
 2. Reviewed public corpus and verified source downloads (implemented).
 3. Page/section extraction with source metadata (implemented).
-4. Chunking, database ingestion, embeddings, and pgvector retrieval.
-5. Structured answers with verified citations and explicit abstention.
-6. A 40–50-question evaluation set and reproducible experiment reports.
-7. Latency, token, and estimated-cost monitoring; CI image builds.
-8. AWS deployment, a Bedrock backend, and an MCP interface.
+4. Page-contained chunking with versioned configuration (implemented).
+5. Embeddings, database ingestion, and pgvector retrieval.
+6. Structured answers with verified citations and explicit abstention.
+7. A 40–50-question evaluation set and reproducible experiment reports.
+8. Latency, token, and estimated-cost monitoring; CI image builds.
+9. AWS deployment, a Bedrock backend, and an MCP interface.
 
 No accuracy, groundedness, latency, cost, or cloud-deployment results are claimed until they are measured and published.
