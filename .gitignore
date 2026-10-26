@@ -21,3 +21,4 @@ wheels/
 # Downloaded sources and extracted records (metadata is tracked in docs/)
 /data/raw/
 /data/processed/
+/data/chunks/

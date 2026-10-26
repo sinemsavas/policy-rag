@@ -30,7 +30,7 @@ The pipeline:
 
 The first and last source pages contain material from neighboring sections. They are trimmed at the section headings rather than discarded: a boundary page may contain valid text for two different forms. Each form receives only its own text.
 
-Body line breaks and line-end hyphenation are retained for now. Normalization for chunking will be a separate, reviewable step. The profile requires extractable text, expected headers, and matching labels; blank/scanned pages, rotated pages, ambiguous headings, and unexpected metadata produce an error for review.
+Body line breaks and line-end hyphenation are retained for now. [Baseline chunking](chunking.md) preserves this text; normalization changes will require a separate profile. The profile requires extractable text, expected headers, and matching labels; blank/scanned pages, rotated pages, ambiguous headings, and unexpected metadata produce an error for review.
 
 ## Record contract
 
@@ -81,4 +81,4 @@ These 47 records contain section-trimmed text; some source boundary pages overla
 
 GovInfo's source PDFs produce pypdf's `Xref table not zero-indexed` warning. The parser corrects the object numbering; source hashes, labels, page counts, and section markers are still checked. The warning is left visible.
 
-Database ingestion, chunks, embeddings, and retrieval are the next milestones.
+[Page-contained chunking](chunking.md) is implemented. Database ingestion, embeddings, and retrieval are the next milestones.
