@@ -247,7 +247,24 @@ CI dosyasının varlığı, o çalışmanın geçtiğinin kanıtı değildir; ta
 
 **Tarih:** 28.10.2026. Bu değişiklik, geçmiş çalışmayı anlatan Türkçe proje rehberini, bu GitHub dökümünü ve ayrıntılı gelecek planını ekler. README bunlara bağlanır; corpus notundaki eski durum ifadesi chunking'in tamamlandığını gösterecek şekilde düzeltilir. Uygulama, bağımlılıklar ve workflow değiştirilmez.
 
-Bu bölümün dal/PR ve gözlenen CI bilgileri, ilgili kayıtlar oluştuktan sonra tamamlanır. Sonuç belli olmadan birleştirme veya başarı iddiası yazılmaz.
+**Teslim kaydı:** [PR #6 — Add detailed Turkish project guide, GitHub history, and roadmap](https://github.com/sinemsavas/policy-rag/pull/6). Çalışma dalı `docs/project-handbook`; ilk belge yayım commit'i [`9005d64`](https://github.com/sinemsavas/policy-rag/commit/9005d64e28ff2a563929108d0d34a111d25f73ae). PR 28.10.2026 14:20:50 CET tarihinde açıldı. Bu kayıt daha sonra aynı PR içinde eklendi; güncel son commit ve birleştirme durumu PR sayfasında izlenir.
+
+| Dosya | Yapılan iş |
+| --- | --- |
+| [docs/project-guide.md](project-guide.md) | Başlangıçtan bugüne ayrıntılı anlatım, dosya haritası, mimari, komutlar, veri sözleşmeleri, testler ve sorun çözümleri |
+| [docs/github-history.md](github-history.md) | İlk altı main commit'i, beş önceki PR, bütün değişen dosyalar, dal/commit eşleştirmeleri ve 19 tarihsel CI kaydı; bu PR'nin teslim kaydı |
+| [docs/roadmap.md](roadmap.md) | On iki adımın durumu; sonraki aşamalar için uygulama sırası ve tamamlanma kanıtı |
+| [README.md](../README.md) | Üç ayrıntılı belgeye giriş bağlantıları |
+| [docs/corpus.md](corpus.md) | Chunking durumunun düzeltilmesi ve ana rehbere bağlantı |
+
+**Yerel doğrulama:** Mevcut paket `75 passed` verdi. İlk belge revizyonunda 113 göreli bağlantı, açık bölüm bağlantıları, tablo sütunları ve 32 kod bloğu kontrol edildi. Diğer takip edilen dosyalar kaynak commit'inin Git blob hash'leriyle eşleştirildi. Üç PDF'nin boyut/SHA-256 bilgileri ve iki mevcut koşunun 47 sayfa, 225/328 chunk, 213.403 kaynak karakteri sonuçları yeniden kontrol edildi. Bu teslim kaydı eklendikten sonra dokümantasyon bağlantı ve biçim kontrolleri tekrar uygulandı.
+
+| İlk belge revizyonunun kontrolü | Actions kaydı | Gözlenen sonuç |
+| --- | --- | --- |
+| Çalışma dalı push, `9005d64` | [40695574561](https://github.com/sinemsavas/policy-rag/actions/runs/40695574561) | `success` |
+| PR, `9005d64` | [40695591143](https://github.com/sinemsavas/policy-rag/actions/runs/40695591143) | `success` |
+
+Bu iki bağlantı ilk revizyonun kayıtlarıdır; PR sayfası sonraki belge kayıt güncellemesinin kontrollerini de gösterir. Dokümanın kendi son SHA'sı ve birleştirme sonrası main koşusu, sonraki geçmiş güncellemesinde kesin bağlantılarıyla eklenebilir.
 
 ## 8. Sonraki değişikliklerin kayıt şablonu
 
