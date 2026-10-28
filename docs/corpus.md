@@ -45,7 +45,7 @@ The downloader verifies bytes, not PDF structure or policy semantics. Page count
 - Keep the original, one-based PDF page position for citations. Printed CFR labels are separate metadata: PDF page 1 of the Dwelling file is printed page 156.
 - Preserve the unmodified source and its hash so extraction changes remain reproducible.
 
-**Current status:** source selection, provenance, verified acquisition, and page/section extraction are implemented. [Extraction notes](extraction.md) describe the page-preserving JSONL command and its validation. Database ingestion, chunking, and retrieval remain to be implemented.
+**Current status:** source selection, provenance, verified acquisition, page/section extraction, and [page-contained chunking](chunking.md) are implemented. [Extraction notes](extraction.md) describe the page-preserving JSONL command and its validation. Embeddings, database ingestion, and retrieval remain to be implemented. The [project guide](project-guide.md) explains the complete current pipeline and links to the development history and next milestones.
 
 ## Validation
 
