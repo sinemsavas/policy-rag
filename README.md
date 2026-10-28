@@ -4,6 +4,10 @@ A portfolio project being developed into a source-citing RAG assistant for publi
 
 **Status: foundation, source acquisition, page extraction, and chunking implemented.** Database ingestion, embeddings, question answering, evaluation results, and AWS deployment are planned. This repository does not yet expose a question-answering endpoint.
 
+## Detailed project documentation (Türkçe)
+
+The [detailed project guide](docs/project-guide.md) explains the work from the initial Ubuntu/WSL setup through the current chunking pipeline, including file responsibilities, architecture, commands, data contracts, tests, and troubleshooting. The [GitHub history](docs/github-history.md) records commits, branches, PRs, changed files, and observed push/CI results. The [roadmap](docs/roadmap.md) describes the implementation sequence and completion evidence for embeddings, retrieval, cited answers, evaluation, monitoring, AWS, Bedrock, and MCP. These documents include an update format for subsequent milestones.
+
 ## Implemented
 
 - FastAPI with Pydantic response schemas and validated environment settings.
